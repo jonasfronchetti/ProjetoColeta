@@ -1,0 +1,100 @@
+
+
+
+CREATE TABLE "cidade" (
+"codcidade"  SERIAL NOT NULL ,
+"nome" VARCHAR(100) NOT NULL ,
+"cep" VARCHAR(9) ,
+"uf" VARCHAR(2) ,
+PRIMARY KEY ("codcidade")
+);
+
+CREATE TABLE "cliente" (
+"codcliente"  SERIAL NOT NULL ,
+"nome" VARCHAR(50) NOT NULL ,
+"cod_cidade" INTEGER ,
+"iFederal" VARCHAR(18) ,
+"email" VARCHAR(100) ,
+"endereco" VARCHAR(120) ,
+"bairro" VARCHAR(30) ,
+"numero" VARCHAR(10) ,
+"complemento" VARCHAR(100) ,
+"telefone" VARCHAR(20) ,
+"endereco1" VARCHAR(120) ,
+"bairro1" VARCHAR(30) ,
+"numero1" VARCHAR(10) ,
+"complemento1" VARCHAR(100) ,
+"endereco2" VARCHAR(120) ,
+"bairro2" VARCHAR(30) ,
+"numero2" VARCHAR(10) ,
+"complemento2" VARCHAR(100) ,
+"revisar" SMALLINT ,
+"ativo" SMALLINT ,
+PRIMARY KEY ("codcliente")
+);
+
+CREATE TABLE "coleta" (
+"codcoleta"  SERIAL NOT NULL ,
+"contato" VARCHAR(50) ,
+"tipocontato" SMALLINT ,
+"status" SMALLINT ,
+"remetente" INTEGER NOT NULL ,
+"rem_nome" VARCHAR(100) ,
+"rem_cidade" VARCHAR(100) ,
+"rem_endereco" VARCHAR(120) ,
+"rem_bairro" VARCHAR(30) ,
+"rem_numero" VARCHAR(10) ,
+"rem_complemento" VARCHAR(100) ,
+"destinatario" INTEGER NOT NULL ,
+"des_nome" VARCHAR(100) ,
+"des_cidade" VARCHAR(100) ,
+"des_endereco" VARCHAR(120) ,
+"des_bairro" VARCHAR(30) ,
+"des_numero" VARCHAR(10) ,
+"des_complemento" VARCHAR(100) ,
+"revisar" SMALLINT ,
+"observacao" VARCHAR(150) ,
+PRIMARY KEY ("codcoleta")
+);
+
+CREATE TABLE "evento_coleta" (
+"codevento_coleta"  SERIAL NOT NULL ,
+"codcoleta" INTEGER NOT NULL ,
+"data" string NOT NULL ,
+"hora" string NOT NULL ,
+"local" INTEGER ,
+"situacao" SMALLINT ,
+PRIMARY KEY ("codevento_coleta", "codcoleta")
+);
+
+CREATE TABLE "local" (
+"codlocal"  SERIAL NOT NULL ,
+"nome" VARCHAR(100) NOT NULL ,
+PRIMARY KEY ("codlocal")
+);
+
+CREATE TABLE "situacao" (
+"codsituacao"  SERIAL NOT NULL ,
+"nome" VARCHAR(200) ,
+PRIMARY KEY ("codsituacao")
+);
+
+CREATE TABLE "usuarios" (
+"codusuario"  SERIAL NOT NULL ,
+"nome" VARCHAR(50) NOT NULL ,
+"usuario" VARCHAR(50) NOT NULL ,
+"senha" VARCHAR(20) NOT NULL ,
+"cliente" INTEGER ,
+"nivel" SMALLINT ,
+"ativo" SMALLINT ,
+PRIMARY KEY ("codusuario")
+);
+
+ALTER TABLE "cliente" ADD FOREIGN KEY ("cod_cidade") REFERENCES "cidade" ("codcidade") ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE "coleta" ADD FOREIGN KEY ("remetente") REFERENCES "cliente" ("codcliente") ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE "coleta" ADD FOREIGN KEY ("destinatario") REFERENCES "cliente" ("codcliente") ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE "evento_coleta" ADD FOREIGN KEY ("codcoleta") REFERENCES "coleta" ("codcoleta") ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE "evento_coleta" ADD FOREIGN KEY ("local") REFERENCES "local" ("codlocal") ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE "evento_coleta" ADD FOREIGN KEY ("situacao") REFERENCES "situacao" ("codsituacao") ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE "usuarios" ADD FOREIGN KEY ("cliente") REFERENCES "cliente" ("codcliente") ON UPDATE NO ACTION ON DELETE NO ACTION;
+
